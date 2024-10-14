@@ -2,7 +2,7 @@ import pool from "../../configuration/database.js";
 
 const getTestCases = async ()=>{
     try {
-        const response = await pool.query("select id, description, assignee, status, issueid from TestCases order by id");
+        const response = await pool.query("select id, description, assignee, status, issueid, project, details, lastedit, lasteditdate, created_date from TestCases order by id");
         return {code:200, res:response.rows.length >= 1 ? response.rows : "No records found"};
     } catch (error) {
         console.error(error);
@@ -12,7 +12,7 @@ const getTestCases = async ()=>{
 
 const getTestCasesById = async (id)=>{
     try {
-        const response= await pool.query("select id, description, assignee, status, issueid from TestCases where Id = $1 order by id",[id]);
+        const response= await pool.query("select id, description, assignee, status, issueid, project, details, lastedit, lasteditdate, created_date from TestCases where Id = $1 order by id",[id]);
         return {code:200, res:response.rows.length >= 1 ? response.rows : "No records found"}
     } catch (error) {
         console.error(error);
@@ -21,9 +21,9 @@ const getTestCasesById = async (id)=>{
 };
 
 
-const createTestCases = async (description, assignee, status,issueid)=>{
+const createTestCases = async (description, assignee, status,issueid,project, details, lastedit)=>{
     try {
-        const response = await pool.query("insert into TestCases(description, assignee, status, issueid) values ($1,$2,$3,$4) returning id",[description, assignee, status, issueid]);
+        const response = await pool.query("insert into TestCases(description, assignee, status, issueid, project, details, lastedit) values ($1,$2,$3,$4,$5,$6,$7) returning id",[description, assignee, status, issueid,project, details, lastedit]);
         return {code:201, res:{success:true, id:response.rows[0].id, message:"TestCases created successfully"}};
     } catch (error) {
         console.error(error);
