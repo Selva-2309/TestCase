@@ -1,6 +1,7 @@
 import testCasesQuery from "./testCasesQuery.js";
 import validateDetails from "./validateController.js";
 import bcrypt from 'bcrypt';
+
 const getTestCases = async (req,res)=>{
     try {
         const response = await testCasesQuery.getTestCases();
@@ -22,14 +23,14 @@ const getTestCasesById = async (req,res)=>{
 };
 const createTestCases = async (req,res)=>{
     try {
-        const {description, assignee, status,issueid, project, details, lastedit} = req.body;
+        const {description, assignee, status,issueid, project, details, lastedit, createdby} = req.body;
         console.log(req.body);
 
         if(Object.keys(req.body).length === 0){
             return res.status(400).json({message: "No mandatory details to create"});
         }
         
-        const response = await testCasesQuery.createTestCases(description, assignee, status,issueid,project,details, lastedit);
+        const response = await testCasesQuery.createTestCases(description, assignee, status,issueid,project,details, lastedit, createdby);
         return res.status(response.code).json(response.res);
                
     } catch (error) {

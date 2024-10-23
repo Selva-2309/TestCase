@@ -4,7 +4,7 @@ import App from './App';
 import Main from './viewByTicketId/mainDescription';
 import Login from './loginPage/login';
 import TopNav from './navbars/topNav';
-import DescriptionView from './viewByTicketId/descriptionView';
+import DescriptionView from './descriptionView/descriptionView';
 
 const RoutesWithNav = () => {
   const location = useLocation();

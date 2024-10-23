@@ -4,6 +4,7 @@ import users from '../routers/routerUsers.js';
 import testcases from '../routers/routerTestCases.js';
 import token from '../routers/routerToken.js';
 import login from '../routers/routerLoginAuth.js';
+import upload from '../routers/routerUpload.js';
 
 const router = express.Router();
 
@@ -13,5 +14,6 @@ router.use("/services/objects",users);
 router.use("/services/objects",testcases);
 router.use("/server/data",token);
 router.use("/services/auth", login);
+router.use("/services/objects", upload);
 
 export default router;
