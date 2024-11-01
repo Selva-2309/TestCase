@@ -7,7 +7,7 @@ const DropdownStatus = ({item,updateStatus}) => {
                       <Dropdown.Toggle variant='' title={item.status} key={item.id}>
                         {item.status}
                       </Dropdown.Toggle>
-                      <Dropdown.Menu>
+                      <Dropdown.Menu style={{ overflowY:'scroll'}}>
                         <Dropdown.Item onClick={() => updateStatus('Pass', item.id, true)}>Pass</Dropdown.Item>
                         <Dropdown.Item onClick={() => updateStatus('Fail', item.id, true)}>Fail</Dropdown.Item>
                         <Dropdown.Item onClick={() => updateStatus('Hold', item.id, true)}>Hold</Dropdown.Item>

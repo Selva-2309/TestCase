@@ -7,7 +7,8 @@ import {  useCallback, useEffect, useRef, useState } from 'react';
 import React from 'react';
 import '../../../src/App.css'
 import axios from 'axios';
-import { useLocation, useNavigate } from 'react-router-dom';
+import { useLocation, useNavigate, useParams } from 'react-router-dom';
+import Cookies from 'js-cookie';
 
 const Main = () => {
   const [description, setDescription] = useState({});
@@ -18,9 +19,9 @@ const Main = () => {
   const navigate = useNavigate();
   const location = useLocation();
   const [listDes, setListDes] = useState(false);
-  const token = sessionStorage.getItem('token');
-  const project = sessionStorage.getItem('project');
-  const lastedit = sessionStorage.getItem("user");
+  const token = Cookies.get('token');
+  const {project} = useParams();
+  const lastedit = Cookies.get("user");
 
 
   const fetchDescription = useCallback(async () => {
@@ -32,9 +33,7 @@ const Main = () => {
           'Authorization': `Bearer ${token}`
         }
       });
-      console.log('Fetched Descriptions:', response.data);
       const datas = response.data;
-      console.log(datas[0].project)
 
       const filterData = datas.filter((testcase) => {
         return  testcase.project == project; // Add the check here
@@ -43,7 +42,6 @@ const Main = () => {
      setUnGroup(filterData);
      if (filterData.length > 0) {
       const groupedData = Object.groupBy(filterData, ({ issueid }) => issueid);
-      console.log('Grouped Descriptions:', groupedData);
       setDescription(groupedData); // Set grouped data
     } else {
       setDescription(filterData); // If no grouping is needed, set ungrouped data
@@ -51,7 +49,7 @@ const Main = () => {
     } catch (error) {
       console.error('Error fetching descriptions:', error);
     }
-  },[filter,token]);
+  },[filter,token, project]);
 
 
   const handleInputChange = (e) => {
@@ -69,7 +67,6 @@ const Main = () => {
           }
         }
       );
-      console.log('Created Description:', response.data);
       setDescrip('');
       await fetchDescription();
       if(filter){
@@ -106,9 +103,7 @@ const Main = () => {
           }
         }
       );
-      console.log(response.data);
       const groupedData = Object.groupBy(response.data.record, ({ issueid }) => issueid);
-      console.log('Grouped Descriptions2:', groupedData);
       setDescription(groupedData);
       
     } catch (error) {

@@ -9,9 +9,9 @@ const DropdownAssignee = ({user, item, updateStatus}) => {
                       <Dropdown.Toggle variant='' title={item.assignee} key={item.id}>
                         {item.assignee}
                       </Dropdown.Toggle>
-                      <Dropdown.Menu>
+                      <Dropdown.Menu style={{height:"250px", overflowY:'scroll'}}>
                         {user.map((element) => (
-                          <Dropdown.Item key={element.id}>
+                          <Dropdown.Item key={element.id} >
                             <FormControlLabel
                               control={
                                 <Checkbox

@@ -8,18 +8,20 @@ import DropdownAssignee from '../dropDowns/DropdownAssignee.jsx';
 import convertTextToHTML from './convertTextToHTML.js';
 import axios from 'axios';
 import moment from 'moment';
+import { Offcanvas } from 'react-bootstrap';
+import Cookies from 'js-cookie';
 
 const DescriptionView = ({ user, item, updateDescription, updateStatus }) => {
     const [open, setOpen] = useState(false);
     const navigate = useNavigate();
     const [flag, setFlag] = useState(false);
-    const project = sessionStorage.getItem('project');
+    const project = Cookies.get('project');
     const [content, setContent] = useState(item.details ? item.details : { body: "", html: "", date: "" });
     const [isPaste, setIsPaste] = useState(false);
     const [text, setText] = useState(false);
     const [editDes, setEditDes] = useState(item.description);
     const inputRef = useRef();
-    const token = sessionStorage.getItem("token");
+    const token = Cookies.get("token");
 
     useEffect(() => {
         if (flag) {
@@ -145,14 +147,15 @@ const DescriptionView = ({ user, item, updateDescription, updateStatus }) => {
 
     return (
         <React.Fragment>
-            <p>
-                <Link to={`/auth/${project}/testcases/viewTestCase/${item.id}`} onClick={handleOpen}>
+            <h6 style={{ whiteSpace:'nowrap', overflow:'hidden', textOverflow:'ellipsis',width:'500px', cursor:'pointers'}}>
+                <Link to={`/auth/${project}/testcases/viewTestCase/${item.id}`} onClick={handleOpen} style={{textDecoration:'none', color:'black'}}>
                     {item.description}
                 </Link>
-            </p>
+            </h6>
+
 
             <Drawer
-                sx={{ width: '70vw', overflowX: "hidden" }}
+                sx={{ width: '10vw', overflowX: "hidden" }}
                 PaperProps={{ sx: { width: '85vw', borderRadius: '10px 0 0 10px', overflowX: "hidden", overflowY: "auto" } }}
                 open={open}
                 onClose={handleClose}
@@ -183,7 +186,7 @@ const DescriptionView = ({ user, item, updateDescription, updateStatus }) => {
                                 ) : (
                                     <>
                                         <button style={{ marginLeft: '10px' }} class="btn btn-success" onClick={() => { updateDescription({ description: editDes }, item.id); setFlag(false); }}>Save</button>
-                                        <button onClick={() => setFlag(false)} class="btn btn-light" style={{ color: "red", border: "1px solid red", marginLeft: "10px" }}>Cancel</button>
+                                        <button onClick={(e) => {setFlag(false); setEditDes(item.description)}} class="btn btn-light" style={{ color: "red", border: "1px solid red", marginLeft: "10px" }}>Cancel</button>
                                     </>
                                 )}
 

@@ -1,6 +1,8 @@
 import usersQuery from "./usersQuery.js";
 import validateDetails from "./validateController.js";
 import bcrypt from 'bcrypt';
+
+
 const getUsers = async (req,res)=>{
     try {
         const response = await usersQuery.getUsers();
@@ -22,7 +24,7 @@ const getUsersById = async (req,res)=>{
 };
 const createUser = async (req,res)=>{
     try {
-        const {username, email, password, cpassword} = req.body;
+        const {username, email, password, cpassword,picture} = req.body;
         let pass;
         console.log(req.body);
 
@@ -38,7 +40,7 @@ const createUser = async (req,res)=>{
                     pass = await bcrypt.hash(password,10);
                 }
                 
-                const response = await usersQuery.createUser(username, email,  pass);
+                const response = await usersQuery.createUser(username, email, pass, picture);
                 return res.status(response.code).json(response.res);
             }else{
                 return res.status(400).json({message: "Password doesn't match"});

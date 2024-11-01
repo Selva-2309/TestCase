@@ -4,6 +4,7 @@ import '../../../src/App.css'
 import { useEffect } from 'react';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
+import Cookies from 'js-cookie';
 
 const Login = () => {
     const [flag, setFlag] = useState(true);
@@ -21,7 +22,8 @@ const Login = () => {
           try {
             const { data } = await axios.post('http://localhost:4000/server/data/token', { user: 'demo', password: '123' });
             setToken(data.token);
-            sessionStorage.setItem('token', data.token);
+            Cookies.set('token',data.token,{expires:1/24,path:'/'});
+            
           } catch (error) {
             console.error('Error fetching token:', error);
           }
@@ -65,7 +67,8 @@ const Login = () => {
             });
             if(response && response.status === 200){
                 console.log(response.data.message);
-                sessionStorage.setItem('user',input.username)
+                Cookies.set('user',input.username,{expires:1,path:'/'});
+                Cookies.set('userId',response.data.Id, {expires:1,path:'/'});
                 navigate(`/auth/dashboard`);
             }
         } catch (error) {
