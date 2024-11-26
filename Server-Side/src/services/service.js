@@ -5,6 +5,7 @@ import testcases from '../routers/routerTestCases.js';
 import token from '../routers/routerToken.js';
 import login from '../routers/routerLoginAuth.js';
 import upload from '../routers/routerUpload.js';
+import project from '../routers/routerProject.js';
 
 const router = express.Router();
 
@@ -15,5 +16,6 @@ router.use("/services/objects",testcases);
 router.use("/server/data",token);
 router.use("/services/auth", login);
 router.use("/services/objects", upload);
+router.use("/services/objects",project);
 
 export default router;

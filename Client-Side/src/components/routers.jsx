@@ -13,7 +13,7 @@ const RoutesWithNav = () => {
 
   return (
     <>
-      {showNav && <TopNav />}
+      {showNav && <TopNav  />}
       <Routes>
         {/* Default redirect from root to /auth/login */}
         <Route path="/" element={<Navigate to="/auth/login" />} />
@@ -23,10 +23,10 @@ const RoutesWithNav = () => {
           <Route path='/auth/login' element={<Login />} />
           <Route path='/auth/signup' element={<Login />} />
           <Route path='/auth/dashboard' element={<App />} />
-          <Route path='/auth/:id/testcases' element={<Main />} />
-          <Route path='/auth/:project/testcases/viewTestCase/:ids' element={<Main />} />
+          <Route path='/auth/:project/testcases' element={<Main />} />
+          <Route path='/auth/:project/testcases/viewTestCase/:id' element={<Main />} />
           <Route path='/auth/testcases/issues' element={<Main />} />
-          <Route path='/auth/:id/testcases/?filterQuery=id' element={<Main />} />
+          <Route path='/auth/:project/testcases/?filterQuery=id' element={<Main />} />
           
           {/* Catch-all route for undefined paths within /auth */}
           <Route path='*' element={<Navigate to='/auth/login' />} />

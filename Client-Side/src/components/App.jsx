@@ -8,13 +8,15 @@ import { PieChart } from '@mui/x-charts/PieChart';
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend } from 'recharts';
 import { useNavigate } from 'react-router-dom';
 import { Grid } from '@mui/material';
+import Cookies from 'js-cookie';
 
 function App() {
   const location = useLocation();
   const [list, setList] = useState({});
   const [users, setUsers] = useState([]);
-  const token = sessionStorage.getItem('token');
+  const token = Cookies.get('token');
   const navigate = useNavigate();
+
 
   useEffect(() => {
     if (!token) return;
@@ -79,66 +81,68 @@ function App() {
   };
 
   return (
-   <div  style={{display:'flex', flexDirection:'column', overflowY:'auto', padding:'30px'}}>
-      <Grid  spacing={4} >
-      {location.pathname === '/auth/dashboard' && Object.keys(list).length > 0 && (
-        Object.keys(list).map((project) => (
-          <div >
-            <Grid item xs={12} style={{boxSizing:'border-box', boxShadow:'2px solid rgb(2, 110, 49)'}}>
-              
-              <h4 className="project-header" style={{gridRow:'grid-row-2',justifyContent:'start', alignItems:'start'}}  onClick={() => { sessionStorage.setItem('project', `${project}`) }}>
-              <Link 
-                to={`/auth/${project}/testcases`} 
-               
-              >
-                {project}
-              </Link>
-            </h4>
-              
-            </Grid>
-            
+    <div style={{ display: 'flex', flexDirection: 'column', overflowY: 'auto', padding: '30px' }}>
+      <Grid spacing={4} >
+        {location.pathname === '/auth/dashboard' && Object.keys(list).length > 0 && (
+          Object.keys(list).map((project, key) => (
+            <div key={key} >
+              <Grid item xs={12} style={{ boxSizing: 'border-box', boxShadow: '2px solid rgb(2, 110, 49)' }}>
+
+                <Link
+                  to={`/auth/${project}/testcases`}
+                  onClick={() => { Cookies.set('project', `${project}`,{expires:1, path:'/'}); }}
+                >
+                  <h4  >
+
+                    {project}
+
+                  </h4>
+                </Link>
+
+              </Grid>
+
               <Grid container spacing={4}>
-              <Grid item xs={5}>
-              <PieChart
-                series={[
-                  {
-                    data: getPieChartData(list[project]),
-                    highlightScope: { fade: 'global', highlight: 'item' },
-                    faded: { innerRadius: 30, additionalRadius: -30, color: 'gray' },
-                    outerRadius: 100,
-                    paddingAngle: 2,
-                    cornerRadius: 5
-                  },
-                ]}
-                height={200}
-                width={500}
-              />
+                <Grid item xs={5}>
+                  <PieChart
+                    series={[
+                      {
+                        data: getPieChartData(list[project]),
+                        highlightScope: { fade: 'global', highlight: 'item' },
+                        faded: { innerRadius: 30, additionalRadius: -30, color: 'gray' },
+                        outerRadius: 100,
+                        paddingAngle: 2,
+                        cornerRadius: 5
+                      },
+                    ]}
+                    height={200}
+                    width={500}
+                  />
+                </Grid>
+
+
+                <Grid size={7}>
+                  <BarChart
+                    width={500}
+                    height={300}
+                    data={getAssigneeData(list[project])}
+
+                  >
+                    <CartesianGrid strokeDasharray="3 3" />
+                    <XAxis dataKey="name" />
+                    <YAxis />
+                    <Tooltip />
+                    <Bar dataKey="count" fill="#8884d8" />
+                  </BarChart>
+                </Grid>
               </Grid>
-            
-             
-              <Grid size={7}>
-              <BarChart
-                width={500}
-                height={300}
-                data={getAssigneeData(list[project])}
-                
-              >
-                <CartesianGrid strokeDasharray="3 3" />
-                <XAxis dataKey="name" />
-                <YAxis />
-                <Tooltip />
-                <Bar dataKey="count" fill="#8884d8" />
-              </BarChart>
-              </Grid>
-              </Grid>
-          
-          </div>
-        ))
-      )}
+
+            </div>
+          ))
+        )}
       </Grid>
       <Outlet />
-   </div>
-   
+    </div>
+
   );
 
 }

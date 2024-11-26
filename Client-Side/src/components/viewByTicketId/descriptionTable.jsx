@@ -13,10 +13,11 @@ import DeleteIcon from '@mui/icons-material/Delete';
 import VisibilityIcon from '@mui/icons-material/Visibility';
 import DropdownStatus from '../dropDowns/DropdownStatus';
 import DropdownAssignee from '../dropDowns/DropdownAssignee';
+import Cookies from 'js-cookie';
 
 
 const DescriptionTable = ({ description, descrip, handleKeyDown, handleInputChange, inputRef, fetchDescription, filter, fetchDescripByFilter }) => {
-  const token = sessionStorage.getItem('token');
+  const token = Cookies.get('token');
   const [user, setUser] = useState([]);
   const [flag, setFlag] = useState({ flag: false, id: '' });
   const [click, setClick] = useState({});
@@ -148,7 +149,7 @@ const DescriptionTable = ({ description, descrip, handleKeyDown, handleInputChan
                     <Dropdown.Item onClick={() => { deleteTestCase(group[0].issueid) }}><DeleteIcon />Delete</Dropdown.Item>
                   </Dropdown.Menu>
                 </Dropdown>
-
+                
               </Typography>
             </TableCell>
           </TableRow>
@@ -156,17 +157,20 @@ const DescriptionTable = ({ description, descrip, handleKeyDown, handleInputChan
             <>
               {group.map((item, index) => (
                 <TableRow key={item.id}>
-                  <TableCell align='left' style={{ display: 'flex' }}>
+                  <TableCell align='left' >
+                    <div style={{ display: 'flex', flexDirection:'row' }}>
                     <Dropdown>
-                      <Dropdown.Toggle variant='' key={item.id}></Dropdown.Toggle>
+                      <Dropdown.Toggle variant='' key={item.id} ></Dropdown.Toggle>
                       <Dropdown.Menu>
                         <Dropdown.Item ><VisibilityIcon />View</Dropdown.Item>
                         <Dropdown.Item onClick={() => deleteTestCase(item.id)}><DeleteIcon />Delete</Dropdown.Item>
                       </Dropdown.Menu>
                     </Dropdown>
-                    {item.issueid}
+                    <div style={{alignContent:"space-around"}}>{item.issueid}</div>
+                    </div>
                   </TableCell>
                   <TableCell align="left" onDoubleClick={() => doubleClick(item.id)} style={{ whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'revert', width: '100px' }}>
+                    <div>
                     {flag.flag && flag.id === item.id
                       ? <EditDescription
                         description={item.description}
@@ -179,10 +183,13 @@ const DescriptionTable = ({ description, descrip, handleKeyDown, handleInputChan
 
                       />
                       : <DescriptionView user={user} item={item} updateDescription={updateDescription} updateStatus={updateStatus} />}
+                    </div>
                   </TableCell> {/* Description column */}
+
                   <TableCell align="left">
                     {<DropdownAssignee user={user} item={item} updateStatus={updateStatus} />}
                   </TableCell> {/* Assignee column */}
+                  
                   <TableCell align="left">
                     {<DropdownStatus item={item} updateStatus={updateStatus} />}
                   </TableCell> {/* Status column */}
