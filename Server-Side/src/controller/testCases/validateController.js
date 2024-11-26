@@ -1,6 +1,6 @@
 const validateDetails = async (update, value, index, request,id, res)=>{
     try {
-        const {description, assignee, status,issueid,project, details, lastedit} = request;
+        const {description, assignee, status,issueid,project, details, lastedit,createdby} = request;
         if(description != null && description != undefined){
             update.push(`description =$${index++}`);
             value.push(description);
@@ -28,6 +28,10 @@ const validateDetails = async (update, value, index, request,id, res)=>{
         if(lastedit != null && lastedit != undefined){
             update.push(` lastedit = $${index++}`);
             value.push(lastedit);
+        }
+        if(createdby != null && createdby != undefined){
+            update.push(` createdby = $${index++}`);
+            value.push(createdby);
         }
         if(update.length == 0){
             res.status(400).json({message:"No records to update, Please give fields and details to update."});

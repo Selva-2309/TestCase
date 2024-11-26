@@ -61,7 +61,7 @@ const Main = () => {
   const createDescription = async (issueid, filter) => {
     try {
       const response = await axios.post('http://localhost:4000/services/objects/TestCases',
-        { description: descrip, issueid: issueid ? issueid : parseInt(filter) , project:`${project}`, lastedit:lastedit},
+        { description: descrip, issueid: issueid ? issueid : parseInt(filter) , project:`${project}`, lastedit:lastedit, createdby:lastedit},
         {
           headers: {
             'Content-Type': 'application/json',
