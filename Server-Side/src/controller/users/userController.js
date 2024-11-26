@@ -22,22 +22,23 @@ const getUsersById = async (req,res)=>{
 };
 const createUser = async (req,res)=>{
     try {
-        const {Name, Email, Password, cpassword} = req.body;
+        const {username, email, password, cpassword} = req.body;
+        let pass;
         console.log(req.body);
 
         if(Object.keys(req.body).length === 0){
             return res.status(400).json({message: "No mandatory details to create"});
         }
 
-        const result = await usersQuery.getUsersByEmail(Email);
+        const result = await usersQuery.getUsersByEmail(email);
 
         if(result.res == "No records found"){
-            if(Password === cpassword){
-                if(Password){
-                    const pass = await bcrypt.hash(Password,10);
+            if(password === cpassword){
+                if(password){
+                    pass = await bcrypt.hash(password,10);
                 }
                 
-                const response = await usersQuery.createUser(Name, Email, Password? pass : Password);
+                const response = await usersQuery.createUser(username, email,  pass);
                 return res.status(response.code).json(response.res);
             }else{
                 return res.status(400).json({message: "Password doesn't match"});
