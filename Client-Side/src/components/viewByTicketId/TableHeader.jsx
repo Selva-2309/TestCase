@@ -4,10 +4,10 @@ const TableHeader = () => {
   return (
     <TableHead style={{ position: 'sticky', top: 0, zIndex: 1000, backgroundColor: '#fff', borderBottom:'1px solid green'}}>
       <TableRow>
-        <TableCell  align="left" style={{ width: '10%',  fontWeight:'bold'  }}>TestCaseId</TableCell>
-        <TableCell  align="left" style={{ width: '40%',  fontWeight:'bold'  }}>Description</TableCell>
-        <TableCell  align="left" style={{ width: '25%',  fontWeight:'bold'  }}>Assignee</TableCell>
-        <TableCell  align="left" style={{ width: '25%',  fontWeight:'bold'  }}>Status</TableCell>
+        <TableCell  align="left" style={{ width: '10%',  fontWeight:'bold'  }} className='table-cell'>TestCaseId</TableCell>
+        <TableCell  align="left" style={{ width: '40%',  fontWeight:'bold'  }} className='table-cell'>Description</TableCell>
+        <TableCell  align="left" style={{ width: '25%',  fontWeight:'bold'  }} className='table-cell'>Assignee</TableCell>
+        <TableCell  align="left" style={{ width: '25%',  fontWeight:'bold'  }} className='table-cell'>Status</TableCell>
       </TableRow>
     </TableHead>
   )

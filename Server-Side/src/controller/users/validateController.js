@@ -1,6 +1,6 @@
 const validateDetails = async (update, value, index, request,id, res)=>{
     try {
-        const {Name, Email, Password, picture} = request;
+        const {Name, Email, Password, picture,firstname, lastname} = request;
         if(Name != null && Name != undefined){
             update.push(`Name =$${index++}`);
             value.push(Name);
@@ -19,6 +19,13 @@ const validateDetails = async (update, value, index, request,id, res)=>{
         }if(picture != null && picture != undefined){
             update.push(` picture = $${index++}`);
             value.push(picture);
+        }if(firstname != null && firstname != undefined){
+            update.push(` firstname = $${index++}`);
+            value.push(firstname);
+        }
+        if(lastname != null && lastname != undefined){
+            update.push(` lastname = $${index++}`);
+            value.push(lastname);
         }
         if(update.length == 0){
             res.status(400).json({message:"No records to update, Please give fields and details to update."});

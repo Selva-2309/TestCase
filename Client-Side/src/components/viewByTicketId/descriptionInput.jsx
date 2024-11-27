@@ -1,10 +1,11 @@
 import React from 'react'
 import { TableRow, TableCell } from '@mui/material'
+import { Form } from 'react-bootstrap'
 const DescriptionInput = ({descrip, inputRef, handleInputChange,handleKeyDown,issueid, groupIndex}) => {
     return (
-        <TableRow >
-            <TableCell colSpan={4} >
-                <input
+        <TableRow>
+            <TableCell colSpan={4} className="table-cell" >
+                <Form.Control
                     style={{ width: '100%', border: 'none', boxSizing: 'border-box', outline: 'none' }}
                     ref={(el) => (inputRef.current[groupIndex] = el)}
                     type="text"

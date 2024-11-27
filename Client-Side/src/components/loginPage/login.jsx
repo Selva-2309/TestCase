@@ -18,16 +18,7 @@ const Login = () => {
     const navigate = useNavigate();
 
     useEffect(() => {
-        const fetchToken = async () => {
-          try {
-            const { data } = await axios.post('http://localhost:4000/server/data/token', { user: 'demo', password: '123' });
-            setToken(data.token);
-            Cookies.set('token',data.token,{expires:1/24,path:'/'});
-            
-          } catch (error) {
-            console.error('Error fetching token:', error);
-          }
-        };
+       
         fetchToken();
       }, []);
 
@@ -37,7 +28,16 @@ const Login = () => {
         }))
         
       }
-
+      const fetchToken = async () => {
+        try {
+          const { data } = await axios.post('http://localhost:4000/server/data/token', { user: 'demo', password: '123' });
+          setToken(data.token);
+          Cookies.set('token',data.token,{expires:1/24,path:'/'});
+          
+        } catch (error) {
+          console.error('Error fetching token:', error);
+        }
+      };
     const verfyLogin = async(e)=>{
         e.preventDefault();
         try {
@@ -67,8 +67,8 @@ const Login = () => {
             });
             if(response && response.status === 200){
                 console.log(response.data.message);
-                Cookies.set('user',input.username,{expires:1,path:'/'});
-                Cookies.set('userId',response.data.Id, {expires:1,path:'/'});
+                Cookies.set('user',input.username,{path:'/'});
+                Cookies.set('userId',response.data.Id, {path:'/'});
                 navigate(`/auth/dashboard`);
             }
         } catch (error) {

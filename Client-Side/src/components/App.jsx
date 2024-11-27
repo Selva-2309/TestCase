@@ -1,6 +1,6 @@
 // Dashboard
 
-import { useEffect, useState } from 'react';
+import { createContext, useEffect, useState } from 'react';
 import React from 'react';
 import axios from 'axios';
 import { Link, Outlet, useLocation } from 'react-router-dom';
@@ -9,6 +9,8 @@ import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend } from 'rec
 import { useNavigate } from 'react-router-dom';
 import { Grid } from '@mui/material';
 import Cookies from 'js-cookie';
+
+export const userContext = createContext();
 
 function App() {
   const location = useLocation();
@@ -20,45 +22,50 @@ function App() {
 
   useEffect(() => {
     if (!token) return;
-
-    const fetchDescription = async () => {
-      try {
-        const { data } = await axios.get('http://localhost:4000/services/objects/TestCases', {
-          headers: {
-            'Content-Type': 'application/json',
-            'Authorization': `Bearer ${token}`,
-          },
-        });
-        const grouped = data.reduce((acc, item) => {
-          if (!acc[item.project]) {
-            acc[item.project] = [];
-          }
-          acc[item.project].push(item);
-          return acc;
-        }, {});
-        setList(grouped);
-      } catch (error) {
-        console.error('Error fetching descriptions:', error);
-      }
-    };
-
-    const fetchUsers = async () => {
-      try {
-        const { data } = await axios.get('http://localhost:4000/services/query?q=select name from users', {
-          headers: {
-            'Content-Type': 'application/json',
-            'Authorization': `Bearer ${token}`,
-          },
-        });
-        setUsers(data.record || []); // Ensure users is an array
-      } catch (error) {
-        console.error('Error fetching users:', error);
-      }
-    };
-
     fetchDescription();
     fetchUsers();
+    
   }, [token, location]);
+
+  const fetchDescription = async () => {
+    try {
+      const { data } = await axios.get('http://localhost:4000/services/objects/TestCases', {
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${token}`,
+        },
+      });
+      const grouped = data.reduce((acc, item) => {
+        if (!acc[item.project]) {
+          acc[item.project] = [];
+        }
+        acc[item.project].push(item);
+        return acc;
+      }, {});
+      setList(grouped);
+    } catch (error) {
+      console.error('Error fetching descriptions:', error);
+    }
+  };
+
+  const fetchUsers = async () => {
+    try {
+      const { data } = await axios.get('http://localhost:4000/services/query?q=select name from users', {
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${token}`,
+        },
+      });
+      console.log('Fetched users:', data.record);
+      setUsers(data.record); // Ensure users is an array
+    } catch (error) {
+      console.error('Error fetching users:', error);
+    }
+  };
+  
+ 
+  
+
 
   const getPieChartData = (items) => {
     const passCount = items.filter(item => item.status === 'Pass').length;
@@ -81,7 +88,10 @@ function App() {
   };
 
   return (
+    
     <div style={{ display: 'flex', flexDirection: 'column', overflowY: 'auto', padding: '30px' }}>
+      <userContext.Provider value={users.length >0 ? users : ['demo']}>
+      
       <Grid spacing={4} >
         {location.pathname === '/auth/dashboard' && Object.keys(list).length > 0 && (
           Object.keys(list).map((project, key) => (
@@ -141,6 +151,8 @@ function App() {
         )}
       </Grid>
       <Outlet />
+      
+      </userContext.Provider>
     </div>
 
   );

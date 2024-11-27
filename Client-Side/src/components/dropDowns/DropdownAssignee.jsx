@@ -1,17 +1,22 @@
-import React from 'react';
+import React, { useContext } from 'react';
 import Dropdown from 'react-bootstrap/Dropdown';
 import FormControlLabel from '@mui/material/FormControlLabel';
 import Checkbox from '@mui/material/Checkbox';
+import { UserContext } from '../contextFile';
 
-const DropdownAssignee = ({user, item, updateStatus}) => {
+
+const DropdownAssignee = ({ item}) => {
+  const {users, updateStatus} = useContext(UserContext);
+
+
   return (
     <Dropdown style={{ display: 'flex', width: '100%' }}>
                       <Dropdown.Toggle variant='' title={item.assignee} key={item.id}>
                         {item.assignee}
                       </Dropdown.Toggle>
                       <Dropdown.Menu style={{height:"250px", overflowY:'scroll'}}>
-                        {user.map((element) => (
-                          <Dropdown.Item key={element.id} >
+                        { users && users.map((element, index) => (
+                          <Dropdown.Item key={index} >
                             <FormControlLabel
                               control={
                                 <Checkbox

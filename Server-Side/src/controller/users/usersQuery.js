@@ -2,7 +2,7 @@ import pool from "../../configuration/database.js";
 
 const getUsers = async ()=>{
     try {
-        const response = await pool.query("select Id, name, email, picture from Users");
+        const response = await pool.query("select Id, name, email, picture, firstname, lastname from Users");
         return {code:200, res:response.rows.length >= 1 ? response.rows : "No records found"};
     } catch (error) {
         console.error(error);
@@ -12,7 +12,7 @@ const getUsers = async ()=>{
 
 const getUsersById = async (id)=>{
     try {
-        const response= await pool.query("select Id, Name, Email,picture from Users where Id = $1",[id]);
+        const response= await pool.query("select Id, Name, Email,picture, firstname, lastname from Users where Id = $1",[id]);
         return {code:200, res:response.rows.length >= 1 ? response.rows : "No records found"}
     } catch (error) {
         console.error(error);
@@ -30,9 +30,9 @@ const getUsersByEmail = async (email) => {
         return {code:400, res:{success:false, message:error.message}};
     }
 };
-const createUser = async (Name, Email, password, picture)=>{
+const createUser = async (Name, Email, password, picture, firstname, lastname)=>{
     try {
-        const response = await pool.query("insert into Users(Name, Email, Password, picture) values ($1,$2,$3,$4) returning id",[Name,Email, password, picture]);
+        const response = await pool.query("insert into Users(Name, Email, Password, picture, firstname, lastname) values ($1,$2,$3,$4, $5,$6) returning id",[Name,Email, password, picture, firstname, lastname]);
         return {code:201, res:{success:true, id:response.rows[0].id, message:"User created successfully"}};
     } catch (error) {
         console.error(error);

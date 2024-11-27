@@ -1,6 +1,6 @@
-import { Drawer, Table, TableBody, TableCell, TableRow } from '@mui/material';
+import { Drawer } from '@mui/material';
 import { Link } from 'react-router-dom';
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useContext, useEffect, useRef, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import CloseIcon from '@mui/icons-material/Close';
 import DropdownStatus from '../dropDowns/DropdownStatus.jsx';
@@ -8,10 +8,11 @@ import DropdownAssignee from '../dropDowns/DropdownAssignee.jsx';
 import convertTextToHTML from './convertTextToHTML.js';
 import axios from 'axios';
 import moment from 'moment';
-import { Offcanvas } from 'react-bootstrap';
 import Cookies from 'js-cookie';
+import '../../../src/App.css'
+import { UserContext } from '../contextFile.jsx';
 
-const DescriptionView = ({ user, item, updateDescription, updateStatus }) => {
+const DescriptionView = ({item}) => {
     const [open, setOpen] = useState(false);
     const navigate = useNavigate();
     const [flag, setFlag] = useState(false);
@@ -22,6 +23,7 @@ const DescriptionView = ({ user, item, updateDescription, updateStatus }) => {
     const [editDes, setEditDes] = useState(item.description);
     const inputRef = useRef();
     const token = Cookies.get("token");
+    const updateDescription = useContext(UserContext);
 
     useEffect(() => {
         if (flag) {
@@ -30,7 +32,6 @@ const DescriptionView = ({ user, item, updateDescription, updateStatus }) => {
     }, [flag])
 
     const handleOpen = (e) => {
-        e.preventDefault();
         setOpen(true); // Open the drawer
     };
 
@@ -147,12 +148,11 @@ const DescriptionView = ({ user, item, updateDescription, updateStatus }) => {
 
     return (
         <React.Fragment>
-            <h6 style={{ whiteSpace:'nowrap', overflow:'hidden', textOverflow:'ellipsis',width:'500px', cursor:'pointers'}}>
-                <Link to={`/auth/${project}/testcases/viewTestCase/${item.id}`} onClick={handleOpen} style={{textDecoration:'none', color:'black'}}>
+            <div style={{ whiteSpace:'nowrap', overflow:'hidden', textOverflow:'ellipsis',width:'700px' }} >
+                <Link onClick={handleOpen} to={`/auth/${project}/testcases/viewTestCase/${item.id}`}  style={{textDecoration:'none', color:'black'}} className='description'>
                     {item.description}
                 </Link>
-            </h6>
-
+            </div>
 
             <Drawer
                 sx={{ width: '10vw', overflowX: "hidden" }}
@@ -259,11 +259,11 @@ const DescriptionView = ({ user, item, updateDescription, updateStatus }) => {
                                 <dl style={{ margin: '10px' }}>
                                     <div style={{ display: "flex", flexDirection: "row", alignItems: 'baseline' }}>
                                         <dt style={{ width: '50%' }}>Assignee</dt>
-                                        <dd>{<DropdownAssignee user={user} item={item} updateStatus={updateStatus} />}</dd>
+                                        <dd>{<DropdownAssignee item={item}  />}</dd>
                                     </div>
                                     <div style={{ display: "flex", flexDirection: "row", alignItems: 'baseline' }}>
                                         <dt style={{ width: '50%' }}>Status</dt>
-                                        <dd>{<DropdownStatus item={item} updateStatus={updateStatus} />}</dd>
+                                        <dd>{<DropdownStatus item={item}  />}</dd>
                                     </div>
                                     <div style={{ display: "flex", flexDirection: "row", alignItems: 'baseline' }} >
                                         <dt style={{ width: '55%' }}>IssueId</dt>
