@@ -1,11 +1,10 @@
-import { StrictMode } from 'react'
 import { createRoot } from 'react-dom/client'
 import Routers from './components/routers'
 import React from 'react'
-
+import { ContextFile } from '../src/components/contextFile';
 
 createRoot(document.getElementById('root')).render(
-  <React.StrictMode>
+  <ContextFile>
     <Routers />
-  </React.StrictMode>,
+  </ContextFile>
 )

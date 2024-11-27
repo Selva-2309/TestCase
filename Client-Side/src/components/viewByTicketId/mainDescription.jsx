@@ -1,6 +1,6 @@
 // Main.js
 
-import { Grid, TableBody, TableRow, TableCell, TableContainer, Table } from '@mui/material';
+import { Grid, TableBody, TableRow, TableCell, TableContainer, Table, Paper } from '@mui/material';
 import TableHeader from './TableHeader';
 import DescriptionTable from './descriptionTable';
 import {  useCallback, useEffect, useRef, useState } from 'react';
@@ -9,6 +9,7 @@ import '../../../src/App.css'
 import axios from 'axios';
 import { useLocation, useNavigate, useParams } from 'react-router-dom';
 import Cookies from 'js-cookie';
+import { Form, Tab, Tabs } from 'react-bootstrap';
 
 const Main = () => {
   const [description, setDescription] = useState({});
@@ -132,60 +133,73 @@ const Main = () => {
 
   return (
     <div className='grid-container'>
-      <Grid container>
-        <Grid item xs={2} className='sidebar'>
-          <TableBody>
-            {description &&
-              Object.keys(description).map((element, index) => (
-                <TableRow key={index} className="table-row">
-                  <TableCell onClick={() => setFilter(element) } className="table-cell">{element}</TableCell>
-                </TableRow>
-              ))}
-          </TableBody>
-        </Grid>
-        <Grid item xs={10} style={{
-              display: 'flex',
-              flexDirection: 'column',
-              height: 'calc(100vh - 50px)', 
-              overflowY: 'auto',
-              position: 'fixed',
-              right: 0,
-              width: '90%', 
-            }} className="main-content">
-          {/* Input Field */}
-          <div style={{display:'block'}}>
-          <input
-           className="input-field"
-           placeholder='enter ticketid'
-            onChange={(e) => {
-              e.preventDefault();
-              setFilter(e.target.value);
-            }}
-            
-          />
-          </div>
-          
+       <Grid>
+         
+            <Grid container>
+       
+       <Grid item xs={1} sx={{padding:'0'}}>
+         <ul style={{padding:'3px', margin:'0'}}>
+           {description &&
+             Object.values(description).map((element, index) => (
+              
+                 <li key={index} onClick={() => setFilter(element[0].issueid) } 
+                 style={{ listStyleType: "none", padding: "5px", width: "100%" }} className='list-issueid' >
+                   <div style={{display:'flex', flexDirection:'row', gap:'5px', width:'100%', borderBottom:'1px solid #ccc'}}>
+                   <p style={{flexGrow:1}}>{element[0].issueid}</p>
+                   <p>{element.length}</p>
+                   </div>
+                 </li>
+               
+             ))}
+         </ul>
+       </Grid>
+       <Grid item xs={11} style={{
+             display: 'flex',
+             flexDirection: 'column',
+             height: '75vh', 
+             overflowY: 'auto',
+             position: 'relative',
+             right: 0,
+           }} className="main-content">
+         {/* Input Field */}
+         <div style={{display:'block'}}>
+         <Form.Group style={{margin:'10px'}}>
+         <Form.Control
+          className="input-field"
+          placeholder='enter ticketid'
+           onChange={(e) => {
+             e.preventDefault();
+             setFilter(e.target.value);
+           }}
+           
+         />
+         </Form.Group>
+         </div>
+         
 
-          {/* Table Container */}
-          <TableContainer
-             className="table-container" 
-          >
-            <Table size='small' >
-              <TableHeader  />
-              <DescriptionTable
-                description={description}
-                descrip={descrip}
-                handleKeyDown={handleKeyDown}
-                handleInputChange={handleInputChange}
-                inputRef={inputRef}
-                fetchDescription={fetchDescription}
-                filter={filter}
-                fetchDescripByFilter={fetchDescripByFilter}
-              />
-            </Table>
-          </TableContainer>
+         {/* Table Container */}
+         <TableContainer
+             component={Paper}
+         >
+           <Table  size='small' >
+             <TableHeader  />
+             <DescriptionTable
+               description={description}
+               descrip={descrip}
+               handleKeyDown={handleKeyDown}
+               handleInputChange={handleInputChange}
+               inputRef={inputRef}
+               fetchDescription={fetchDescription}
+               filter={filter}
+               fetchDescripByFilter={fetchDescripByFilter}
+             />
+           </Table>
+         </TableContainer>
+       </Grid>
+     </Grid>
+           
         </Grid>
-      </Grid>
+     
     </div>
   );
 }

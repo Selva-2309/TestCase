@@ -24,7 +24,7 @@ const getUsersById = async (req,res)=>{
 };
 const createUser = async (req,res)=>{
     try {
-        const {username, email, password, cpassword,picture} = req.body;
+        const {username, email, password, cpassword,picture, firstname, lastname} = req.body;
         let pass;
         console.log(req.body);
 
@@ -40,7 +40,7 @@ const createUser = async (req,res)=>{
                     pass = await bcrypt.hash(password,10);
                 }
                 
-                const response = await usersQuery.createUser(username, email, pass, picture);
+                const response = await usersQuery.createUser(username, email, pass, picture, firstname, lastname);
                 return res.status(response.code).json(response.res);
             }else{
                 return res.status(400).json({message: "Password doesn't match"});
@@ -58,7 +58,9 @@ const createUser = async (req,res)=>{
 const updateUser = async (req,res)=>{
     try {
         const {id} = req.params;
+        console.log(req.body)
         const result = await usersQuery.getUsersById(id);
+        
         if(result.res == "No records found"){
             return res.status(result.code).json(result.res);
         }else if(result.res.length == 1){

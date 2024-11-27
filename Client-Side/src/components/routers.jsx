@@ -5,6 +5,7 @@ import Main from './viewByTicketId/mainDescription';
 import Login from './loginPage/login';
 import TopNav from './navbars/topNav';
 import DescriptionView from './descriptionView/descriptionView';
+import ViewTabs from './navbars/tabs';
 
 const RoutesWithNav = () => {
   const location = useLocation();
@@ -23,10 +24,10 @@ const RoutesWithNav = () => {
           <Route path='/auth/login' element={<Login />} />
           <Route path='/auth/signup' element={<Login />} />
           <Route path='/auth/dashboard' element={<App />} />
-          <Route path='/auth/:project/testcases' element={<Main />} />
-          <Route path='/auth/:project/testcases/viewTestCase/:id' element={<Main />} />
-          <Route path='/auth/testcases/issues' element={<Main />} />
-          <Route path='/auth/:project/testcases/?filterQuery=id' element={<Main />} />
+          <Route path='/auth/:project/testcases' element={<ViewTabs />} />
+          <Route path='/auth/:project/testcases/viewTestCase/:id' element={<ViewTabs />} />
+          <Route path='/auth/testcases/issues' element={<ViewTabs />} />
+          <Route path='/auth/:project/testcases/?filterQuery=id' element={<ViewTabs />} />
           
           {/* Catch-all route for undefined paths within /auth */}
           <Route path='*' element={<Navigate to='/auth/login' />} />

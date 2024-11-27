@@ -20,41 +20,14 @@
     background-color: green;
 }
 
+/* mainDescription */
+.list-issueid:hover{
+  background-color: rgba(242, 245, 245, 0.964);
+  cursor: pointer;
+}
 
 
 
-  
-  /* Sidebar Styles */
-  .sidebar {
-    width: 15%; /* Sidebar width */
-    background-color: #f5f5f5; /* Light gray background */
-    overflow-y: auto; /* Enable vertical scrolling if needed */
-    margin: 10px;
-  }
-  
-  .sidebar table {
-    width: 100%;
-    border-collapse: collapse;
-  }
-  
-  .sidebar .table-cell {
-    cursor: pointer;
-    padding: 10px;
-    border-bottom: 1px solid #ddd; /* Light gray border */
-  }
-  
-  .sidebar .table-cell:hover {
-    background-color: #e0e0e0; /* Slightly darker gray on hover */
-  }
-  
-  /* Main Content Styles */
-  .main-content {
-    display: flex;
-    flex-direction: column;
-    background-color: #fff; 
-    overflow-y: auto;
-    position: relative;
-  }
   
   .input-field {
     width: 99%;
@@ -96,3 +69,38 @@
     background-color: #e8afaf;
   }
   
+  .table-cell {
+    border-right: 1px solid #ccc;
+    border-left: 1px solid #ccc;
+  }
+
+
+
+
+  /*profile page */
+
+  .profile-head{
+    display: flex;
+    flex-direction: row;
+    align-items: center; 
+    padding-top: 5px;
+  }
+
+  .nav-ls:hover{
+    background-color: rgba(242, 245, 245, 0.964);
+    cursor: pointer;
+  }
+
+  .nav-ls{
+    border-radius: 3px;
+    padding: 3px;
+   
+  }
+
+  /* description view */
+
+  .description:hover {
+    color: blue;
+    cursor:pointer;
+    text-decoration: underline;
+  }
