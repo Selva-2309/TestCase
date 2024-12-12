@@ -99,8 +99,18 @@
 
   /* description view */
 
-  .description:hover {
-    color: blue;
+  .description {
+    color: black;
     cursor:pointer;
-    text-decoration: underline;
+    text-decoration: none;
+  }
+
+
+
+  /* nav bar */
+
+  .breadcrumbs{
+    color: black;
+    text-decoration: none;
+    cursor: pointer;
   }

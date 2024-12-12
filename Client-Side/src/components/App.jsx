@@ -10,7 +10,7 @@ import { useNavigate } from 'react-router-dom';
 import { Grid } from '@mui/material';
 import Cookies from 'js-cookie';
 
-export const userContext = createContext();
+
 
 function App() {
   const location = useLocation();
@@ -90,7 +90,7 @@ function App() {
   return (
     
     <div style={{ display: 'flex', flexDirection: 'column', overflowY: 'auto', padding: '30px' }}>
-      <userContext.Provider value={users.length >0 ? users : ['demo']}>
+     
       
       <Grid spacing={4} >
         {location.pathname === '/auth/dashboard' && Object.keys(list).length > 0 && (
@@ -99,7 +99,7 @@ function App() {
               <Grid item xs={12} style={{ boxSizing: 'border-box', boxShadow: '2px solid rgb(2, 110, 49)' }}>
 
                 <Link
-                  to={`/auth/${project}/testcases`}
+                  to={`/auth/${project}/testcases/view/1`}
                   onClick={() => { Cookies.set('project', `${project}`,{expires:1, path:'/'}); }}
                 >
                   <h4  >
@@ -152,7 +152,7 @@ function App() {
       </Grid>
       <Outlet />
       
-      </userContext.Provider>
+      
     </div>
 
   );

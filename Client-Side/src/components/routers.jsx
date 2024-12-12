@@ -24,13 +24,12 @@ const RoutesWithNav = () => {
           <Route path='/auth/login' element={<Login />} />
           <Route path='/auth/signup' element={<Login />} />
           <Route path='/auth/dashboard' element={<App />} />
-          <Route path='/auth/:project/testcases' element={<ViewTabs />} />
-          <Route path='/auth/:project/testcases/viewTestCase/:id' element={<ViewTabs />} />
-          <Route path='/auth/testcases/issues' element={<ViewTabs />} />
-          <Route path='/auth/:project/testcases/?filterQuery=id' element={<ViewTabs />} />
+          <Route path='/auth/:project/testcases/view/:id' element={<ViewTabs />} />
+          <Route path='/auth/:project/testcases/view/:id/viewTestCase/:ids' element={<ViewTabs />} />
+          <Route path='/auth/:project/testcases/view/:id/?filterQuery=ids' element={<ViewTabs />} />
           
-          {/* Catch-all route for undefined paths within /auth */}
-          <Route path='*' element={<Navigate to='/auth/login' />} />
+          {/* Catch-all route for undefined paths within /auth 
+          <Route path='*' element={<Navigate to='/auth/login' />} /> */}
         </Route>
       </Routes>
     </>

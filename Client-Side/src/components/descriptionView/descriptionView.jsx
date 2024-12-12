@@ -1,5 +1,5 @@
 import { Drawer } from '@mui/material';
-import { Link } from 'react-router-dom';
+import { Link, useLocation, useParams } from 'react-router-dom';
 import React, { useContext, useEffect, useRef, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import CloseIcon from '@mui/icons-material/Close';
@@ -12,7 +12,7 @@ import Cookies from 'js-cookie';
 import '../../../src/App.css'
 import { UserContext } from '../contextFile.jsx';
 
-const DescriptionView = ({item}) => {
+const DescriptionView = ({ item }) => {
     const [open, setOpen] = useState(false);
     const navigate = useNavigate();
     const [flag, setFlag] = useState(false);
@@ -23,7 +23,11 @@ const DescriptionView = ({item}) => {
     const [editDes, setEditDes] = useState(item.description);
     const inputRef = useRef();
     const token = Cookies.get("token");
-    const updateDescription = useContext(UserContext);
+    const { updateDescription } = useContext(UserContext);
+    const viewID = Cookies.get('viewID');
+    const issueId = Cookies.get('issueId');
+    const location = useLocation();
+    const { ids } = useParams();
 
     useEffect(() => {
         if (flag) {
@@ -31,13 +35,18 @@ const DescriptionView = ({item}) => {
         }
     }, [flag])
 
+ 
+
     const handleOpen = (e) => {
+        navigate(`/auth/${project}/testcases/view/${viewID}/viewTestCase/${issueId}`);
+        console.log(issueId)
         setOpen(true); // Open the drawer
+
     };
 
     const handleClose = () => {
         setOpen(false); // Close the drawer
-        navigate(`/auth/${project}/testcases`); // Navigate back to the main test case view
+        navigate(`/auth/${project}/testcases/view/${viewID}`)
     };
 
     const handleChange = (e) => {
@@ -148,8 +157,11 @@ const DescriptionView = ({item}) => {
 
     return (
         <React.Fragment>
-            <div style={{ whiteSpace:'nowrap', overflow:'hidden', textOverflow:'ellipsis',width:'700px' }} >
-                <Link onClick={handleOpen} to={`/auth/${project}/testcases/viewTestCase/${item.id}`}  style={{textDecoration:'none', color:'black'}} className='description'>
+            <div style={{ whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis', width: '700px' }} >
+                <Link onClick={() => {
+                    handleOpen();
+                    Cookies.set('issueId', item.id);
+                }} to={`/auth/${project}/testcases/view/${viewID}/viewTestCase/${item.id}`} className='description'>
                     {item.description}
                 </Link>
             </div>
@@ -186,7 +198,7 @@ const DescriptionView = ({item}) => {
                                 ) : (
                                     <>
                                         <button style={{ marginLeft: '10px' }} class="btn btn-success" onClick={() => { updateDescription({ description: editDes }, item.id); setFlag(false); }}>Save</button>
-                                        <button onClick={(e) => {setFlag(false); setEditDes(item.description)}} class="btn btn-light" style={{ color: "red", border: "1px solid red", marginLeft: "10px" }}>Cancel</button>
+                                        <button onClick={(e) => { setFlag(false); setEditDes(item.description) }} class="btn btn-light" style={{ color: "red", border: "1px solid red", marginLeft: "10px" }}>Cancel</button>
                                     </>
                                 )}
 
@@ -196,9 +208,12 @@ const DescriptionView = ({item}) => {
                                     !flag && <div >
                                         <div style={{ flexGrow: 1, display: "flex" }}>
                                             <p style={{ padding: "3px", margin: "2px" }}>{item?.lastedit ? item.lastedit : item.createdby}</p>
-                                            <p style={{ padding: "3px", margin: "3px", fontSize: "12px", alignContent: "end" }}>{
-                                                item?.lasteditdate ? moment(item?.lasteditdate).fromNow() : moment(item?.created_date).fromNow()
-                                            }{item?.lasteditdate ? "(edited)" : "(opened)"}</p>
+                                           
+                                                 <p style={{ padding: "3px", margin: "3px", fontSize: "12px", alignContent: "end" }}>
+                                                {item?.lasteditdate ? moment(item?.lasteditdate).fromNow() : moment(item?.created_date).fromNow()}
+                                                {item?.lasteditdate ? "(edited)" : "(opened)"}
+                                            </p>
+                                          
                                         </div>
 
                                     </div>
@@ -213,9 +228,12 @@ const DescriptionView = ({item}) => {
                                         !text && <div style={{ display: "flex", flexDirection: "row", alignItems: "center", width: '100%', backgroundColor: "#f5f0f0" }}>
                                             <div style={{ flexGrow: 1, display: "flex" }}>
                                                 <p style={{ padding: "3px", margin: "2px" }}>{item?.lastedit ? item.lastedit : item.createdby}</p>
-                                                <p style={{ padding: "3px", margin: "3px", fontSize: "12px", alignContent: "end" }}>{
-                                                   item?.details?.date ? moment(item?.details?.date).fromNow() : moment(item?.created_date).fromNow()
-                                                }{item?.details?.date ? "(edited)" : "(opened)"}</p>
+                                            
+                                                <p style={{ padding: "3px", margin: "3px", fontSize: "12px", alignContent: "end" }}>
+                                                    {item?.details?.date ? moment(item?.details?.date).fromNow() : moment(item?.created_date).fromNow()}
+                                                    {item?.details?.date ? "(edited)" : "(opened)"}
+                                                </p>
+                                                
                                             </div>
                                             {
                                                 !text && (<button onClick={() => { setText(true); }} class="btn btn-success" style={{ marginRight: '10px', margin: "5px" }}>Edit</button>)
@@ -259,11 +277,11 @@ const DescriptionView = ({item}) => {
                                 <dl style={{ margin: '10px' }}>
                                     <div style={{ display: "flex", flexDirection: "row", alignItems: 'baseline' }}>
                                         <dt style={{ width: '50%' }}>Assignee</dt>
-                                        <dd>{<DropdownAssignee item={item}  />}</dd>
+                                        <dd>{<DropdownAssignee item={item} />}</dd>
                                     </div>
                                     <div style={{ display: "flex", flexDirection: "row", alignItems: 'baseline' }}>
                                         <dt style={{ width: '50%' }}>Status</dt>
-                                        <dd>{<DropdownStatus item={item}  />}</dd>
+                                        <dd>{<DropdownStatus item={item} />}</dd>
                                     </div>
                                     <div style={{ display: "flex", flexDirection: "row", alignItems: 'baseline' }} >
                                         <dt style={{ width: '55%' }}>IssueId</dt>

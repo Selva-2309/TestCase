@@ -19,10 +19,10 @@ import { UserContext } from '../contextFile';
 
 
 const DescriptionTable = ({ description, descrip, handleKeyDown, handleInputChange, inputRef, fetchDescription, filter, fetchDescripByFilter }) => {
- 
+
   const token = Cookies.get('token');
   const [flag, setFlag] = useState({ flag: false, id: '' });
-  
+
   const [users, setUsers] = useState([]);
   const [click, setClick] = useState({});
   const [horiz, setHoriz] = useState();
@@ -93,7 +93,7 @@ const DescriptionTable = ({ description, descrip, handleKeyDown, handleInputChan
       console.error('Error fetching users:', error);
     }
   };
-  
+
 
   const deleteTestCase = async (id) => {
     try {
@@ -129,116 +129,110 @@ const DescriptionTable = ({ description, descrip, handleKeyDown, handleInputChan
 
   useEffect(() => {
     if (!token) return;
-    
+
     fetchUsers();
-    
+
   }, [token]);
 
 
   return (
-    <UserContext.Provider value={{users, updateStatus, updateDescription}}>
-    <TableBody>
-      {description && Object.values(description).length > 0 ? (Object.values(description).map((group, groupIndex) => (
-        <React.Fragment key={groupIndex}>
-          <TableRow>
-            <TableCell colSpan={4} style={{ padding: 0 }}  className='table-cell'>
-              <Typography style={{ fontWeight: 'bold', display: 'flex', alignItems: 'center', paddingLeft: '5px', paddingTop: '5px' }}>
-                <IconButton
-                  aria-label='expand row'
-                  size='small'
-                  onClick={() => handleClick(groupIndex)}
-                >
-                  {!click[groupIndex] ? <KeyboardArrowUpIcon style={{ outline: 'none' }} /> : <KeyboardArrowDownIcon />}
-                </IconButton>
-                {group.length > 0 ? (group[0].issueid == null ? "General" : group[0].issueid) : `${filter}`}
+    <UserContext.Provider value={{ users, updateStatus, updateDescription }}>
+      <TableBody>
+        {description && Object.values(description).length > 0 ? (Object.values(description).map((group, groupIndex) => (
+          <React.Fragment key={groupIndex}>
+            <TableRow>
+              <TableCell colSpan={4} style={{ padding: 0 }} className='table-cell'>
+                <Typography style={{ fontWeight: 'bold', display: 'flex', alignItems: 'center', paddingLeft: '5px', paddingTop: '5px' }}>
+                  <IconButton
+                    aria-label='expand row'
+                    size='small'
+                    onClick={() => handleClick(groupIndex)}
+                  >
+                    {!click[groupIndex] ? <KeyboardArrowUpIcon style={{ outline: 'none' }} /> : <KeyboardArrowDownIcon />}
+                  </IconButton>
+                  {group.length > 0 ? (group[0].issueid == null ? "General" : group[0].issueid) : `${filter}`}
+                  <Dropdown>
+                    <Dropdown.Toggle variant='' className='toggledropdown' style={{ background: 'none' }}><MoreHorizIcon /></Dropdown.Toggle>  {/* ... symbol component*/}
+                    <Dropdown.Menu>
+                      <Dropdown.Item onClick={() => { deleteTestCase(group[0].issueid) }}><DeleteIcon />Delete</Dropdown.Item>
+                    </Dropdown.Menu>
+                  </Dropdown>
+                </Typography>
+              </TableCell>
+            </TableRow>
+            {!click[groupIndex] ?
+              <>
+                {group.map((item, index) => (
+                  <TableRow key={item.id}>
+                    <TableCell align='left' className="table-cell">
+                      <div style={{ display: 'flex', flexDirection: 'row' }}>
+                        <Dropdown>
+                          <Dropdown.Toggle variant='' key={item.id} ></Dropdown.Toggle>
+                          <Dropdown.Menu>
+                            <Dropdown.Item ><VisibilityIcon />View</Dropdown.Item>
+                            <Dropdown.Item onClick={() => deleteTestCase(item.id)}><DeleteIcon />Delete</Dropdown.Item>
+                          </Dropdown.Menu>
+                        </Dropdown>
+                        <div style={{ alignContent: "space-around" }}>{item.issueid}</div>
+                      </div>
+                    </TableCell>
+                    <TableCell align="left" onDoubleClick={() => doubleClick(item.id)} style={{ whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'revert', width: '100px' }} className="table-cell">
+                      <div>
+                        {flag.flag && flag.id === item.id
+                          ? <EditDescription
+                            description={item.description}
+                            id={item.id}
+                            fetchDescription={fetchDescription}
+                            setFlag={setFlag}
+                            filter={filter}
+                            fetchDescripByFilter={fetchDescripByFilter}
+                            updateDescription={updateDescription}
 
+                          />
+                          : <DescriptionView item={item} />}
+                      </div>
+                    </TableCell> {/* Description column */}
+                    <TableCell align="left" className="table-cell">
+                      {<DropdownAssignee item={item} />}
+                    </TableCell> {/* Assignee column */}
+                    <TableCell align="left" className="table-cell">
+                      {<DropdownStatus item={item} />}
+                    </TableCell> {/* Status column */}
+                  </TableRow>
+                ))}
 
-                <Dropdown>
-                  <Dropdown.Toggle variant='' className='toggledropdown' style={{ background: 'none' }}><MoreHorizIcon /></Dropdown.Toggle>  {/* ... symbol component*/}
-                  <Dropdown.Menu>
-                    <Dropdown.Item onClick={() => { deleteTestCase(group[0].issueid) }}><DeleteIcon />Delete</Dropdown.Item>
-                  </Dropdown.Menu>
-                </Dropdown>
-                
-              </Typography>
-            </TableCell>
-          </TableRow>
-          {!click[groupIndex] ?
-            <>
-              {group.map((item, index) => (
-                <TableRow key={item.id}>
-                  <TableCell align='left'  className="table-cell">
-                    <div style={{ display: 'flex', flexDirection:'row' }}>
-                    <Dropdown>
-                      <Dropdown.Toggle variant='' key={item.id} ></Dropdown.Toggle>
-                      <Dropdown.Menu>
-                        <Dropdown.Item ><VisibilityIcon />View</Dropdown.Item>
-                        <Dropdown.Item onClick={() => deleteTestCase(item.id)}><DeleteIcon />Delete</Dropdown.Item>
-                      </Dropdown.Menu>
-                    </Dropdown>
-                    <div style={{alignContent:"space-around"}}>{item.issueid}</div>
-                    </div>
-                  </TableCell>
-                  <TableCell align="left" onDoubleClick={() => doubleClick(item.id)} style={{ whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'revert', width: '100px' }} className="table-cell">
-                    <div>
-                    {flag.flag && flag.id === item.id
-                      ? <EditDescription
-                        description={item.description}
-                        id={item.id}
-                        fetchDescription={fetchDescription}
-                        setFlag={setFlag}
-                        filter={filter}
-                        fetchDescripByFilter={fetchDescripByFilter}
-                        updateDescription={updateDescription}
-
-                      />
-                      : <DescriptionView  item={item}  />}
-                    </div>
-                  </TableCell> {/* Description column */}
-
-                  <TableCell align="left" className="table-cell">
-                    {<DropdownAssignee item={item}  />}
-                  </TableCell> {/* Assignee column */}
-                  
-                  <TableCell align="left" className="table-cell">
-                    {<DropdownStatus item={item} />}
-                  </TableCell> {/* Status column */}
-                </TableRow>
-
-              ))}
-
-              <DescriptionInput
-                descrip={descrip}
-                inputRef={inputRef}
-                handleInputChange={handleInputChange}
-                handleKeyDown={handleKeyDown}
-                issueid={group}
-                groupIndex={groupIndex}
-              /> </>
-            : (
-              <DescriptionInput
-                descrip={descrip}
-                inputRef={inputRef}
-                handleInputChange={handleInputChange}
-                handleKeyDown={handleKeyDown}
-                issueid={filter}
-                groupIndex={groupIndex}
-              />
-            )}
-          <TableRow>
-            <TableCell colSpan={4}  />
-          </TableRow>
-        </React.Fragment>
-      ))) : (
-        <DescriptionInput
-          descrip={descrip}
-          inputRef={inputRef}
-          handleInputChange={handleInputChange}
-          handleKeyDown={handleKeyDown}
-          issueid={filter}
-        />
-      )}
-    </TableBody>
+                <DescriptionInput
+                  descrip={descrip}
+                  inputRef={inputRef}
+                  handleInputChange={handleInputChange}
+                  handleKeyDown={handleKeyDown}
+                  issueid={group}
+                  groupIndex={groupIndex}
+                /> </>
+              : (
+                <DescriptionInput
+                  descrip={descrip}
+                  inputRef={inputRef}
+                  handleInputChange={handleInputChange}
+                  handleKeyDown={handleKeyDown}
+                  issueid={filter}
+                  groupIndex={groupIndex}
+                />
+              )}
+            <TableRow>
+              <TableCell colSpan={4} />
+            </TableRow>
+          </React.Fragment>
+        ))) : (
+          <DescriptionInput
+            descrip={descrip}
+            inputRef={inputRef}
+            handleInputChange={handleInputChange}
+            handleKeyDown={handleKeyDown}
+            issueid={filter}
+          />
+        )}
+      </TableBody>
     </UserContext.Provider>
   );
 };
