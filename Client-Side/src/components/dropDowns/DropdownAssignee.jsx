@@ -6,11 +6,12 @@ import { UserContext } from '../contextFile';
 
 
 const DropdownAssignee = ({ item}) => {
+ 
   const {users, updateStatus} = useContext(UserContext);
 
 
   return (
-    <Dropdown style={{ display: 'flex', width: '100%' }}>
+    <Dropdown style={{ display: 'flex', width: '100%', justifyContent:'space-between' }}>
                       <Dropdown.Toggle variant='' title={item.assignee} key={item.id}>
                         {item.assignee}
                       </Dropdown.Toggle>
@@ -21,7 +22,7 @@ const DropdownAssignee = ({ item}) => {
                               control={
                                 <Checkbox
                                   checked={item.assignee === element.name}
-                                  onClick={() => updateStatus(element.name, item.id)}
+                                  onClick={() => {updateStatus(element.name, item.id);  console.log(item)}}
                                 />
                               }
                               label={element.name}

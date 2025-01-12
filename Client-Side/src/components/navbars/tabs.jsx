@@ -34,16 +34,16 @@ const ViewTabs = () => {
     <div style={{padding:'10px',paddingBottom:'0px', fontSize:'20px', position:'static'}}>
         <p ><Link to={`/auth/dashboard`} className='breadcrumbs'>Dashboard</Link>/<Link to={`/auth/${project}/testcases/view/${viewID}`} className='breadcrumbs'>{project}</Link></p>
       </div>
-    <Tabs activeKey={viewID} onSelect={handleSelect} style={{margin:'10px'}}>
+    <Tabs activeKey={viewID ? viewID : 1} onSelect={handleSelect} style={{margin:'10px'}}>
     
         <Tab eventKey={1} title='viewById' >
-            <Main />
+            <Main  status='issueId'/>
         </Tab>
         <Tab eventKey={2} title='view2' >
           <DescriptionByStatus />
         </Tab>
         <Tab eventKey={3} title='viewByAssignee' >
-            <Main />
+            <Main  status='assignee'/>
         </Tab>
     </Tabs>
     </>

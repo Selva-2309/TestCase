@@ -3,14 +3,16 @@ import React, { useContext, useEffect, useState } from 'react';
 import Cookies from 'js-cookie';
 import axios from 'axios';
 import DescriptionView from '../descriptionView/descriptionView';
+import { Form } from 'react-bootstrap';
 
 const DescriptionByStatus = () => {
     const token = Cookies.get('token');
     const [list, setList] = useState();
+    const viewId = Cookies.get('viewID');
 
     useEffect(()=>{
         fetchDescription();
-    }, [token])
+    }, [token, viewId])
 
     const fetchDescription = async () => {
         try {
@@ -35,6 +37,15 @@ const DescriptionByStatus = () => {
       };
 
   return (
+    <Grid item xs={11} style={{
+                display: 'flex',
+                flexDirection: 'column',
+                height: '75vh',
+                overflowY: 'auto',
+                position: 'relative',
+                right: 0,
+              }} className="main-content">
+    
     <div style={{display:'flex', overflowY:'hidden'}}>
        
             {
@@ -44,21 +55,26 @@ const DescriptionByStatus = () => {
                         display:'flex',
                         flexDirection:'column',
                         minWidth:'350px',
-                        width:'450px',
+                        width:'350px',
                         padding:'10px',
                         borderRadius:'5px',
                         backgroundColor:'#f6f8fa',
                         margin:'10px',
                         border:'1px solid #d1d9e0',
-                        position:'relative',
-                        overflowX:'hidden',
-                        height:'70vw'
+                        position:'relative'
+                        
                         
                     }}>
-                            <div>
-                            <p style={{fontSize:'400'}}>{element}</p>
+                            <div style={{
+                              paddingLeft:'10px',
+                              display:'flex'
+                            }}>
+                               <p style={{fontWeight:'700'}}>{element == 'null' ?   'No TicketId' : element}</p>
+                               <p style={{paddingLeft:'10px'}}>{list[element].length}</p>
                               </div>
-                              <div >
+                              <div style={{
+                                overflowX:'hidden'
+                              }}>
 
                               { list[element].map((ele, index)=>(
                                     <div key={index}
@@ -66,9 +82,11 @@ const DescriptionByStatus = () => {
                                         borderRadius:'5px',
                                         margin:'5px',
                                         padding:'10px',
-                                        boxShadow: '2px 2px 2px 2px rgba(140, 149, 159, 0.15)))',
-                                        border: '1px solid rgba(140, 149, 159, 0.15)))',
-                                        backgroundColor:'white'
+                                        boxShadow: '1px 1px 1px 1px rgba(140, 149, 159, 0.15)',
+                                        border: '1px solid rgba(140, 149, 159, 0.15)',
+                                        backgroundColor:'white',
+                                        display:'flex',
+                                        flexWrap:'wrap'
                                     }}
                                     ><DescriptionView item={ele} /></div>
                                 ))
@@ -81,6 +99,8 @@ const DescriptionByStatus = () => {
             }
         
     </div>
+    </Grid>
+    
   )
 }
 

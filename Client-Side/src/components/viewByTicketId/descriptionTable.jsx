@@ -15,6 +15,7 @@ import DropdownStatus from '../dropDowns/DropdownStatus';
 import DropdownAssignee from '../dropDowns/DropdownAssignee';
 import Cookies from 'js-cookie';
 import { UserContext } from '../contextFile';
+import { useNavigate } from 'react-router-dom';
 
 
 
@@ -22,7 +23,7 @@ const DescriptionTable = ({ description, descrip, handleKeyDown, handleInputChan
 
   const token = Cookies.get('token');
   const [flag, setFlag] = useState({ flag: false, id: '' });
-
+  const navigate = useNavigate();
   const [users, setUsers] = useState([]);
   const [click, setClick] = useState({});
   const [horiz, setHoriz] = useState();
@@ -96,9 +97,14 @@ const DescriptionTable = ({ description, descrip, handleKeyDown, handleInputChan
 
 
   const deleteTestCase = async (id) => {
+    console.log(id)
     try {
-      await axios.delete(`http://localhost:4000/services/objects/TestCases/${id}`,
+      await axios.delete(`http://localhost:4000/services/objects/TestCases`,
         {
+          params:{
+            name:id.name,
+            id: id.id
+          },
           headers: {
             Authorization: `Bearer ${token}`
           }
@@ -128,7 +134,9 @@ const DescriptionTable = ({ description, descrip, handleKeyDown, handleInputChan
   };
 
   useEffect(() => {
-    if (!token) return;
+    if (!token){
+      navigate('/auth/login')
+    };
 
     fetchUsers();
 
@@ -154,7 +162,7 @@ const DescriptionTable = ({ description, descrip, handleKeyDown, handleInputChan
                   <Dropdown>
                     <Dropdown.Toggle variant='' className='toggledropdown' style={{ background: 'none' }}><MoreHorizIcon /></Dropdown.Toggle>  {/* ... symbol component*/}
                     <Dropdown.Menu>
-                      <Dropdown.Item onClick={() => { deleteTestCase(group[0].issueid) }}><DeleteIcon />Delete</Dropdown.Item>
+                      <Dropdown.Item onClick={() => { deleteTestCase({name:"issueId", id:group[0].issueid}) }}><DeleteIcon />Delete</Dropdown.Item>
                     </Dropdown.Menu>
                   </Dropdown>
                 </Typography>
@@ -170,14 +178,14 @@ const DescriptionTable = ({ description, descrip, handleKeyDown, handleInputChan
                           <Dropdown.Toggle variant='' key={item.id} ></Dropdown.Toggle>
                           <Dropdown.Menu>
                             <Dropdown.Item ><VisibilityIcon />View</Dropdown.Item>
-                            <Dropdown.Item onClick={() => deleteTestCase(item.id)}><DeleteIcon />Delete</Dropdown.Item>
+                            <Dropdown.Item onClick={() => deleteTestCase({name:"Id",id:item.id})}><DeleteIcon />Delete</Dropdown.Item>
                           </Dropdown.Menu>
                         </Dropdown>
                         <div style={{ alignContent: "space-around" }}>{item.issueid}</div>
                       </div>
                     </TableCell>
                     <TableCell align="left" onDoubleClick={() => doubleClick(item.id)} style={{ whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'revert', width: '100px' }} className="table-cell">
-                      <div>
+                      <div >
                         {flag.flag && flag.id === item.id
                           ? <EditDescription
                             description={item.description}

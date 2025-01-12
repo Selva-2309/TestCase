@@ -64,12 +64,13 @@ const updateTestCases = async (req,res)=>{
 };
 const deleteTestCases = async (req,res)=>{
     try {
-        const {id} = req.params;
-        const result = await testCasesQuery.getTestCasesById(id);
+        const {name, id} = req.query;
+        const result = name == 'Id' ? await testCasesQuery.getTestCasesById(id) : await testCasesQuery.getTestCasesByIssueId(id);
+        
         if(result.res == "No records found"){
             return res.status(result.code).json({message : result.res});
         }
-        const response = await testCasesQuery.deleteTestCases(id);
+        const response = await testCasesQuery.deleteTestCases(name,id);
         return res.status(response.code).json(response.res);
     } catch (error) {
         console.error(error);
