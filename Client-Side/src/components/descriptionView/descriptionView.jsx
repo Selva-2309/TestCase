@@ -157,7 +157,7 @@ const DescriptionView = ({ item }) => {
 
     return (
         <React.Fragment>
-            <div style={{ whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis', width: '700px' }} >
+            <div  style={{ whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis', width: '700px' }} >
                 <Link onClick={() => {
                     handleOpen();
                     Cookies.set('issueId', item.id);

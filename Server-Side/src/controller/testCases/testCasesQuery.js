@@ -20,6 +20,15 @@ const getTestCasesById = async (id)=>{
     }
 };
 
+const getTestCasesByIssueId = async (id)=>{
+    try {
+        const response= await pool.query("select id, description, assignee, status, issueid, project, details, lastedit, lasteditdate, createdby, created_date from TestCases where issueId = $1 order by id",[id]);
+        return {code:200, res:response.rows.length >= 1 ? response.rows : "No records found"}
+    } catch (error) {
+        console.error(error);
+        return {code:400, res:{success:false, message:error.message}}
+    }
+};
 
 const createTestCases = async (description, assignee, status,issueid,project, details, lastedit, createdby)=>{
     try {
@@ -41,9 +50,9 @@ const updateTestCases = async (update, value, index)=>{
     }
 };
 
-const deleteTestCases = async (id)=>{
+const deleteTestCases = async (name,id)=>{
     try {
-        const response = await pool.query("delete from TestCases where Id =$1",[id]);
+        const response = await pool.query(`delete from TestCases where ${name} =$1`,[id]);
         return {code:200, res:{success:true, message: "Record delete successfully..."}};
     } catch (error) {
         console.error(error);
@@ -51,4 +60,4 @@ const deleteTestCases = async (id)=>{
     }
 };
 
-export default {getTestCases, getTestCasesById, createTestCases, updateTestCases, deleteTestCases};
+export default {getTestCases, getTestCasesById, getTestCasesByIssueId, createTestCases, updateTestCases, deleteTestCases};

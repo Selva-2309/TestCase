@@ -25,6 +25,9 @@ const TopNav = () => {
   const location = useLocation();
 
   useEffect(() => {
+    if(!token){
+      navigate('/auth/login')
+    }
     fetchUsers();
     fetchProjects();
   }, [token, id])
@@ -130,7 +133,7 @@ const TopNav = () => {
                   className='nav-ls' 
                 >
                   <Link
-                    to={`/auth/${element.name}/testcases`}
+                    to={`/auth/${element.name}/testcases/view/1`}
                     key={element.id}
                     style={{ textDecoration: 'none', color: 'inherit' }}
                     onClick={() => {Cookies.set('project', element.name, { expires: 1, path: '/' }); setFlag(false);}}

@@ -9,9 +9,9 @@ import '../../../src/App.css'
 import axios from 'axios';
 import { useLocation, useNavigate, useParams } from 'react-router-dom';
 import Cookies from 'js-cookie';
-import { Form, Tab, Tabs } from 'react-bootstrap';
+import { Dropdown, DropdownItem, DropdownMenu, DropdownToggle, Form, Tab, Tabs } from 'react-bootstrap';
 
-const Main = () => {
+const Main = ({status}) => {
   const [description, setDescription] = useState({});
   const [descrip, setDescrip] = useState("");
   const [filter, setFilter] = useState("");
@@ -23,8 +23,10 @@ const Main = () => {
   const token = Cookies.get('token');
   const { project } = useParams();
   const lastedit = Cookies.get("user");
-  const viewID = Cookies.get('viewID')
-
+  const viewID = Cookies.get('viewID');
+  const [Status, setStatus] = useState(status);
+  const [listByAssignee, setList] =  useState({});
+ 
 
   const fetchDescription = useCallback(async () => {
     if (filter) return;
@@ -45,6 +47,10 @@ const Main = () => {
       if (filterData.length > 0) {
         const groupedData = Object.groupBy(filterData, ({ issueid }) => issueid);
         setDescription(groupedData); // Set grouped data
+        console.log(description)
+        const groupByAssignee = Object.groupBy(filterData, ({assignee}) => assignee);
+        setList(groupByAssignee);
+        console.log(groupByAssignee);
       } else {
         setDescription(filterData); // If no grouping is needed, set ungrouped data
       }
@@ -91,11 +97,32 @@ const Main = () => {
   };
 
 
-
+  const fetchDescriptionByClick = useCallback(async ({name, id})=>{
+    if(!token){
+      navigate('/auth/login');
+    }
+      try{
+        const response = await axios.get(`http://localhost:4000/services/query?q=select id, description, assignee, status, issueid,details from TestCases where ${name} ='${id}' and project = '${project}' order by id`, {
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${token}`
+          }
+        });
+        const groupedData = Object.groupBy(response.data.record, ({ issueid }) => issueid);
+        setDescription(groupedData);
+  
+        const groupByAssignee = Object.groupBy(response.data.record, ({assignee}) => assignee);
+        setList(groupByAssignee);
+      }catch(error){
+        console.log(error);
+      }
+    
+  })
 
   const fetchDescripByFilter = useCallback(async () => {
     if (!filter) return;
     try {
+      
       const query = `http://localhost:4000/services/query?q=select id, description, assignee, status, issueid from TestCases where issueid::text like '%25${filter}%25' and project = '${project}' order by id`;
       const response = await axios.get(query,
         {
@@ -108,24 +135,31 @@ const Main = () => {
       const groupedData = Object.groupBy(response.data.record, ({ issueid }) => issueid);
       setDescription(groupedData);
 
+      const groupByAssignee = Object.groupBy(response.data.record, ({assignee}) => assignee);
+      setList(groupByAssignee);
+
     } catch (error) {
       console.error(error);
     }
   }, [token, filter]);
 
+
+
   useEffect(() => {
     if (!token) return;
 
     if (filter) {
+      console.log('filter'+filter)
       fetchDescripByFilter();
     } else {
       fetchDescription();
     }
   }, [filter, token, fetchDescription, fetchDescripByFilter]);
 
+
   useEffect(() => {
     if (filter === "" || filter === null) {
-      navigate(`/auth/${project}/testcases/view/${viewID}`);  // Navigate only if filter is null or empty
+      navigate(`/auth/${project}/testcases/view/${viewID}`); // Navigate only if filter is null or empty
     } else {
       navigate(`/auth/${project}/testcases/view/${viewID}/?filterQuery=${filter}`);
     }
@@ -136,23 +170,54 @@ const Main = () => {
     <div className='grid-container'>
       <Grid>
         <Grid container>
-          <Grid item xs={1} sx={{ padding: '0' }}>
-            <ul style={{ padding: '3px', margin: '0' }}>
+          <Grid item xs={1.5} sx={{ padding: '0' }}>
+            <Dropdown>
+              <DropdownToggle variant='' title={Status}>
+                {Status}
+              </DropdownToggle>
+              <DropdownMenu>
+                <DropdownItem onClick={()=>{setStatus('issueId')}}>IssueId</DropdownItem>
+                <DropdownItem onClick={()=>{setStatus('assignee')}}>Assignee</DropdownItem>
+              </DropdownMenu>
+            </Dropdown>
+            {
+              Status && Status === 'issueId' ?
+              (
+                <ul style={{ padding: '3px', margin: '0' }}>
+              
               {description &&
-                Object.values(description).map((element, index) => (
+                Object.keys(description).map((element, index) => (
 
-                  <li key={index} onClick={() => setFilter(element[0].issueid)}
+                  <li key={index} onClick={() => fetchDescriptionByClick({name:'issueId', id:element})}
                     style={{ listStyleType: "none", padding: "5px", width: "100%" }} className='list-issueid' >
                     <div style={{ display: 'flex', flexDirection: 'row', gap: '5px', width: '100%', borderBottom: '1px solid #ccc' }}>
-                      <p style={{ flexGrow: 1 }}>{element[0].issueid}</p>
-                      <p>{element.length}</p>
+                      <p style={{ flexGrow: 1 }}>{element}</p>
+                      <p>{description[element].length}</p>
                     </div>
                   </li>
 
                 ))}
             </ul>
+              ) : (
+                <ul style={{ padding: '3px', margin: '0' }}>
+              
+              {listByAssignee &&
+                Object.keys(listByAssignee).map((element, index) => (
+
+                  <li key={index} onClick={() => fetchDescriptionByClick({name:'assignee', id:element})}
+                    style={{ listStyleType: "none", padding: "5px", width: "100%" }} className='list-issueid' >
+                    <div style={{ display: 'flex', flexDirection: 'row', gap: '5px', width: '100%', borderBottom: '1px solid #ccc' }}>
+                      <p style={{ flexGrow: 1 }}>{element}</p>
+                      <p>{listByAssignee[element].length}</p>
+                    </div>
+                  </li>
+
+                ))}
+            </ul>
+              )
+            }
           </Grid>
-          <Grid item xs={11} style={{
+          <Grid item xs={10.5} style={{
             display: 'flex',
             flexDirection: 'column',
             height: '75vh',

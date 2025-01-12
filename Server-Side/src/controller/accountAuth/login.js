@@ -16,7 +16,7 @@ const verifylogin = async (req, res) => {
                     return res.status(200).json({ message: "Account logged in successfully", Id:queryResult.rows[0].id })
                     
                 } else {
-                    return res.status(404).json({ messsage: "Password doesn't match" });
+                    return res.status(404).json({ message: "Password doesn't match" });
                 }
             })
         } else {

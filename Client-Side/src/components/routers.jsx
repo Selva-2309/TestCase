@@ -1,4 +1,4 @@
-import { BrowserRouter, Routes, Route, useLocation, Navigate } from 'react-router-dom';
+import { BrowserRouter, Routes, Route, useLocation, Navigate,matchPath } from 'react-router-dom';
 import React from 'react';
 import App from './App';
 import Main from './viewByTicketId/mainDescription';
@@ -6,15 +6,16 @@ import Login from './loginPage/login';
 import TopNav from './navbars/topNav';
 import DescriptionView from './descriptionView/descriptionView';
 import ViewTabs from './navbars/tabs';
+import PasswordReset from './loginPage/passwordReset';
 
 const RoutesWithNav = () => {
   const location = useLocation();
-  const noNavPaths = ['/auth/login', '/auth/signup'];
-  const showNav = !noNavPaths.includes(location.pathname);
+  const noNavPaths = ['/auth/login', '/auth/signup','/auth/reset-password/:id'];
+  const showNav = noNavPaths.some(path => matchPath({ path, exact: true }, location.pathname));
 
   return (
-    <>
-      {showNav && <TopNav  />}
+    <div>
+      {!showNav && <TopNav  />}
       <Routes>
         {/* Default redirect from root to /auth/login */}
         <Route path="/" element={<Navigate to="/auth/login" />} />
@@ -27,12 +28,13 @@ const RoutesWithNav = () => {
           <Route path='/auth/:project/testcases/view/:id' element={<ViewTabs />} />
           <Route path='/auth/:project/testcases/view/:id/viewTestCase/:ids' element={<ViewTabs />} />
           <Route path='/auth/:project/testcases/view/:id/?filterQuery=ids' element={<ViewTabs />} />
+          <Route path='/auth/reset-password/:email' element={<PasswordReset />} />
           
           {/* Catch-all route for undefined paths within /auth 
           <Route path='*' element={<Navigate to='/auth/login' />} /> */}
         </Route>
       </Routes>
-    </>
+    </div>
   );
 };
 

@@ -8,6 +8,6 @@ router.get("/TestCases", authentication, TestCasesController.getTestCases);
 router.get("/TestCases/:id", authentication, TestCasesController.getTestCasesById);
 router.post("/TestCases",authentication, TestCasesController.createTestCases);
 router.put("/TestCases/:id",authentication, TestCasesController.updateTestCases);
-router.delete("/TestCases/:id", authentication, TestCasesController.deleteTestCases);
+router.delete("/TestCases", authentication, TestCasesController.deleteTestCases);
 
 export default router;
